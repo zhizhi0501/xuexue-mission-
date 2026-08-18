@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#63bde9">
+<title>雪雪大人的神秘任務</title>
+<style>
+:root{--navy:#173d73;--blue:#67c8ef;--pink:#ff9dc1;--paper:#fffdf6;--grass:#71c75c}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#9be1f5;font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif;color:var(--navy)}
+body{min-height:100svh;display:flex;align-items:center;justify-content:center}
+button{font:inherit;-webkit-tap-highlight-color:transparent}
+.game{position:relative;width:min(100vw,430px);height:100svh;max-height:860px;min-height:620px;overflow:hidden;background:linear-gradient(#49b6ee 0 48%,#8dd85f 48% 100%);image-rendering:pixelated}
+.sky{position:absolute;inset:0 0 45%;background:linear-gradient(#43b2ed,#a7eaff)}
+.cloud{position:absolute;width:80px;height:22px;background:#fff;box-shadow:16px -12px #fff,40px -4px #fff;opacity:.9}
+.c1{top:9%;left:5%}.c2{top:16%;right:7%;transform:scale(.75)}
+.trees{position:absolute;left:0;right:0;top:40%;height:13%;background:repeating-linear-gradient(90deg,#2f9057 0 34px,#4aa65c 34px 68px);border-top:6px solid #26784b}
+.grass{position:absolute;left:0;right:0;bottom:0;height:49%;background:linear-gradient(#86d765,#65bc57)}
+.grass:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 14px,rgba(28,99,48,.1) 14px 17px)}
+.stage{position:relative;z-index:5;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px 14px 26px}
+.screen{display:none;width:100%;height:100%;flex-direction:column;align-items:center;justify-content:center}
+.screen.active{display:flex}
+.logo{width:94%;text-align:center;margin-top:-7%;margin-bottom:14px}
+.logo .small{font-weight:900;font-size:clamp(24px,7vw,34px);color:#fff3ca;text-shadow:-3px 0 var(--navy),0 3px var(--navy),3px 0 var(--navy),0 -3px var(--navy),4px 5px #23558a}
+.logo .big{font-weight:1000;font-size:clamp(38px,11vw,54px);color:#ffb2ce;line-height:.95;text-shadow:-4px 0 var(--navy),0 4px var(--navy),4px 0 var(--navy),0 -4px var(--navy),5px 6px #23558a}
+.spark{color:#ffe37f}
+.mascot{width:65%;max-width:265px;filter:drop-shadow(0 5px 0 rgba(22,61,115,.16));animation:bob 2.4s ease-in-out infinite;user-select:none}
+.mascot.fly{animation:fly 3s ease-in-out infinite}.mascot.tilt{animation:tilt .8s ease forwards}.mascot.boing{animation:boing .35s ease}
+@keyframes bob{50%{transform:translateY(-8px)}}@keyframes fly{25%{transform:translate(-25px,-10px) rotate(-3deg)}75%{transform:translate(25px,5px) rotate(3deg)}}@keyframes tilt{45%{transform:rotate(13deg)}100%{transform:rotate(0)}}@keyframes boing{50%{transform:translateX(25px) rotate(8deg)}}
+.box{width:94%;max-width:395px;background:var(--paper);border:4px solid var(--navy);box-shadow:inset 0 0 0 3px #8bd1f1,4px 5px 0 rgba(22,61,115,.25);padding:13px 14px;line-height:1.45;font-weight:800}
+.box.center{text-align:center}.menu{display:grid;gap:8px;margin-top:9px}
+.btn{width:100%;min-height:47px;border:3px solid var(--navy);box-shadow:inset 0 0 0 2px #a9dff5;background:white;color:var(--navy);font-weight:900;text-align:left;padding:8px 12px;cursor:pointer}
+.btn:active{transform:translate(2px,2px)}.btn.primary{background:#fff0f6}.btn.sel:before{content:"▶ ";color:#ef6698}
+.quest{align-self:flex-start;margin:0 0 10px 5%;padding:5px 10px;background:#2d75c2;color:#fff;border:3px solid #fff;outline:2px solid var(--navy);font-weight:900}
+.q{font-size:17px;margin-bottom:9px}.choices{display:grid;gap:7px}.choices.two{grid-template-columns:1fr 1fr}
+.status{min-height:25px;margin-top:9px;color:#e05f91;text-align:center;font-weight:900}
+.items{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:15px 0}.item{width:58px;height:58px;border:3px solid var(--navy);background:#fff;font-size:28px;box-shadow:inset 0 0 0 2px #a7def4;animation:item 1.8s ease-in-out infinite}
+.item:nth-child(2){animation-delay:.2s}.item:nth-child(3){animation-delay:.4s}.item:nth-child(4){animation-delay:.6s}.item:nth-child(5){animation-delay:.8s}@keyframes item{50%{transform:translateY(-7px)}}
+.night{background:linear-gradient(#102a60 0 52%,#274d80 52% 100%)}.night .sky{background:linear-gradient(#10245b,#244f89)}.night .trees,.night .grass{filter:brightness(.55)}
+.stars{display:none;position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(#fff 2px,transparent 3px),radial-gradient(#ffe884 1.5px,transparent 2.5px);background-size:74px 74px,109px 109px;animation:twinkle 1.7s infinite alternate}.night .stars{display:block}@keyframes twinkle{to{opacity:.45}}
+.letter{background:#fff9ef;border:3px solid #dc82a5;box-shadow:inset 0 0 0 2px #ffd0df;padding:18px;line-height:1.8}.letter h2{margin:0 0 10px;text-align:center;color:#dc5184;font-size:20px}
+.mini-mail{display:none;position:absolute;z-index:30;left:12px;bottom:16px;width:57px;height:50px;border:3px solid var(--navy);background:#fff9ef;font-size:27px;cursor:pointer}
+.speech{width:91%;max-width:390px;background:#fff;border:4px solid var(--navy);box-shadow:inset 0 0 0 3px #8bd1f1;padding:12px;text-align:center;font-weight:900}
+.heart{position:absolute;z-index:50;color:#ff6e9f;font-size:25px;pointer-events:none;animation:heart 1.4s ease-out forwards}@keyframes heart{from{opacity:1;transform:translateY(0) scale(.7)}to{opacity:0;transform:translateY(-190px) scale(1.6) rotate(18deg)}}
+.tag{font-size:13px;opacity:.72;margin-top:4px}
+@media(min-width:600px){body{padding:18px}.game{border:5px solid var(--navy);box-shadow:0 14px 40px rgba(15,50,80,.25);height:min(92svh,820px)}}
+</style>
+</head>
+<body>
+<div class="game" id="game">
+  <div class="sky"></div><div class="cloud c1"></div><div class="cloud c2"></div><div class="trees"></div><div class="grass"></div><div class="stars"></div>
+  <button class="mini-mail" id="miniMail" aria-label="重新打開信件">💌</button>
+  <main class="stage">
+
+<section class="screen active" id="intro">
+  <div class="logo"><div class="small">雪雪大人的 <span class="spark">✦</span></div><div class="big">神秘任務</div></div>
+  <div class="mascot" data-dog="normal"></div>
+  <div class="box center"><b>任務內容：？？？</b><div class="menu"><button class="btn primary" data-go="accept">▶ 開始遊戲</button><button class="btn" id="help">　遊戲說明</button></div><div class="status" id="introStatus"></div></div>
+</section>
+
+<section class="screen" id="accept">
+  <div class="mascot" data-dog="normal"></div>
+  <div class="box"><div class="q">雪雪大人！<br>收到一個神秘任務 ☁️<br>完成幾個小問題，就可以領取最後的東西喔！</div><div class="choices two"><button class="btn primary" data-go="q1">▶ 接受任務</button><button class="btn" id="wait">　稍等一下</button></div><div class="status" id="waitStatus"></div></div>
+</section>
+
+<section class="screen" id="q1">
+  <div class="quest">QUEST 1 / 4</div><div class="mascot" data-dog="normal"></div>
+  <div class="box"><div class="q">如果現在突然多一天<br>完全不用上課的假期，妳會選？</div><div class="choices two answers" data-next="q2"><button class="btn">🏠 在家耍廢</button><button class="btn">🎮 打遊戲</button><button class="btn">✈️ 出去玩</button><button class="btn">😴 睡到世界末日</button></div><div class="status"></div></div>
+</section>
+
+<section class="screen" id="q2">
+  <div class="quest">QUEST 2 / 4</div><div class="mascot" data-dog="cloud"></div>
+  <div class="box"><div class="q">如果有人陪妳做一件很無聊的事情，<br>妳比較喜歡？</div><div class="choices answers" data-next="q3"><button class="btn">一直跟妳聊天</button><button class="btn">各做各的，但人還在</button><button class="btn">偶爾講幾句垃圾話</button><button class="btn">直接一起耍廢</button></div><div class="status"></div></div>
+</section>
+
+<section class="screen" id="q3">
+  <div class="quest">QUEST 3 / 4</div><div class="mascot" data-dog="normal"></div>
+  <div class="box center"><div class="q">抓一個妳最順眼的！</div><div class="items"><button class="item" data-item="☁️">☁️</button><button class="item" data-item="⭐">⭐</button><button class="item" data-item="♡">♡</button><button class="item" data-item="🎮">🎮</button><button class="item" data-item="🌙">🌙</button></div><div class="tag">憑直覺就好。</div></div>
+</section>
+
+<section class="screen" id="itemget">
+  <div class="mascot" data-dog="star"></div>
+  <div class="box center"><div style="font-size:28px;font-weight:1000">ITEM GET！</div><div id="itemText" style="margin:8px 0;font-size:18px">獲得了 ⭐！</div><button class="btn primary" data-go="q4">▶ 繼續</button></div>
+</section>
+
+<section class="screen" id="q4">
+  <div class="quest">QUEST 4 / 4</div><div class="mascot" data-dog="normal"></div>
+  <div class="box"><div class="q">如果今天有人偷偷準備了一個小驚喜，<br>妳希望是？</div><div class="choices answers" data-next="surprise"><button class="btn">🍰 好吃的</button><button class="btn">🎁 小禮物</button><button class="btn">🎮 一起玩遊戲</button><button class="btn">💬 一句特別的話</button></div><div class="status"></div></div>
+</section>
+
+<section class="screen" id="surprise">
+  <div class="mascot tilt" data-dog="tilt"></div><div class="speech" id="surpriseText">……？</div>
+</section>
+
+<section class="screen" id="mail">
+  <div style="font-size:72px;margin-bottom:10px">💌</div>
+  <div class="box center"><div class="q">收到一封神秘信件⋯<br>是否要打開？</div><div class="choices two"><button class="btn primary" data-go="letter">▶ 打開</button><button class="btn" id="mailWait">　等一下</button></div><div class="status" id="mailStatus"></div></div>
+</section>
+
+<section class="screen" id="letter">
+  <div class="box"><div class="letter"><h2>雪雪大人，七夕快樂 ♡</h2><div>雪雪大人要天天開心喔</div><div>這段期間辛苦妳啦！</div><div><b>妳是最棒的！</b></div><div id="keptItem" style="text-align:center;font-size:28px;margin-top:10px">⭐</div></div><button class="btn primary" id="closeLetter" style="margin-top:10px">▶ 收起信件</button></div>
+</section>
+
+<section class="screen" id="ending">
+  <div class="mascot fly" id="endDog" data-dog="balloon"></div><div class="speech" id="speech">MISSION COMPLETE！<br>雪雪大人，七夕快樂 ♡</div><div class="tag" style="color:white;text-shadow:1px 1px #173d73;margin-top:8px">偷偷戳戳看？</div>
+</section>
+
+</main></div>
+
+<script>
+const DOG = {
+normal:`<svg viewBox="0 0 300 220" aria-label="大耳狗"><g stroke="#b98b62" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path fill="#fff" d="M105 72C78 51 48 45 22 58C0 69 4 96 19 109C40 128 72 111 100 92Z"/><path fill="#fff" d="M195 72C223 49 254 47 281 61C301 72 297 99 281 111C259 127 227 111 199 92Z"/><path fill="#fff" d="M92 77C98 48 124 34 151 34C179 34 205 49 210 79C214 105 195 121 169 123H130C103 120 86 103 92 77Z"/><path fill="#fff" d="M115 116C108 130 109 159 119 174C129 189 171 190 182 174C192 159 192 132 184 116Z"/><path fill="#fff" d="M112 151C93 144 86 155 89 170C92 184 105 187 117 179C104 180 99 172 102 166C105 161 111 162 116 165"/></g><ellipse cx="127" cy="83" rx="9" ry="15" fill="#55b7df"/><ellipse cx="174" cy="83" rx="9" ry="15" fill="#55b7df"/><ellipse cx="111" cy="103" rx="18" ry="9" fill="#ffc2d5"/><ellipse cx="190" cy="103" rx="18" ry="9" fill="#ffc2d5"/><path d="M142 101Q150 108 158 101M150 107Q150 114 143 114M150 107Q150 114 157 114" fill="none" stroke="#a67c52" stroke-width="4" stroke-linecap="round"/></svg>`,
+cloud:`<svg viewBox="0 0 300 220"><ellipse cx="150" cy="168" rx="95" ry="35" fill="#fff" stroke="#8fd0ed" stroke-width="5"/><g transform="translate(0,-8)"><path fill="#fff" stroke="#b98b62" stroke-width="5" d="M105 72C78 51 48 45 22 58C0 69 4 96 19 109C40 128 72 111 100 92Z"/><path fill="#fff" stroke="#b98b62" stroke-width="5" d="M195 72C223 49 254 47 281 61C301 72 297 99 281 111C259 127 227 111 199 92Z"/><ellipse cx="150" cy="90" rx="60" ry="50" fill="#fff" stroke="#b98b62" stroke-width="5"/><ellipse cx="127" cy="83" rx="8" ry="14" fill="#55b7df"/><ellipse cx="174" cy="83" rx="8" ry="14" fill="#55b7df"/><ellipse cx="112" cy="103" rx="17" ry="8" fill="#ffc2d5"/><ellipse cx="188" cy="103" rx="17" ry="8" fill="#ffc2d5"/><path d="M142 101Q150 108 158 101" fill="none" stroke="#a67c52" stroke-width="4"/></g></svg>`,
+star:`<svg viewBox="0 0 300 220"><use href="#n"/><polygon points="150,130 164,158 195,162 172,183 178,213 150,198 122,213 128,183 105,162 136,158" fill="#ffd95d" stroke="#d8a129" stroke-width="5"/><g>${''}</g></svg>`,
+tilt:`<svg viewBox="0 0 300 220"><g transform="rotate(10 150 110)"><path fill="#fff" stroke="#b98b62" stroke-width="5" d="M105 72C78 51 48 45 22 58C0 69 4 96 19 109C40 128 72 111 100 92Z"/><path fill="#fff" stroke="#b98b62" stroke-width="5" d="M195 72C223 49 254 47 281 61C301 72 297 99 281 111C259 127 227 111 199 92Z"/><ellipse cx="150" cy="90" rx="60" ry="50" fill="#fff" stroke="#b98b62" stroke-width="5"/><ellipse cx="127" cy="83" rx="8" ry="14" fill="#55b7df"/><ellipse cx="174" cy="83" rx="8" ry="14" fill="#55b7df"/><ellipse cx="112" cy="103" rx="17" ry="8" fill="#ffc2d5"/><ellipse cx="188" cy="103" rx="17" ry="8" fill="#ffc2d5"/><path d="M142 101Q150 108 158 101" fill="none" stroke="#a67c52" stroke-width="4"/></g><text x="236" y="55" font-size="34" fill="#ff7b89">?</text></svg>`,
+balloon:`<svg viewBox="0 0 300 220"><g transform="translate(-15,15)"><path fill="#fff" stroke="#b98b62" stroke-width="5" d="M105 72C78 51 48 45 22 58C0 69 4 96 19 109C40 128 72 111 100 92Z"/><path fill="#fff" stroke="#b98b62" stroke-width="5" d="M195 72C223 49 254 47 281 61C301 72 297 99 281 111C259 127 227 111 199 92Z"/><ellipse cx="150" cy="90" rx="60" ry="50" fill="#fff" stroke="#b98b62" stroke-width="5"/><ellipse cx="127" cy="83" rx="8" ry="14" fill="#55b7df"/><ellipse cx="174" cy="83" rx="8" ry="14" fill="#55b7df"/><ellipse cx="112" cy="103" rx="17" ry="8" fill="#ffc2d5"/><ellipse cx="188" cy="103" rx="17" ry="8" fill="#ffc2d5"/><path d="M142 101Q150 108 158 101" fill="none" stroke="#a67c52" stroke-width="4"/></g><path d="M245 43C231 24 207 35 209 55C211 72 228 82 245 96C263 82 280 71 281 54C282 34 257 24 245 43Z" fill="#ff8db6" stroke="#c9668c" stroke-width="4"/><path d="M245 96C243 126 225 145 198 158" fill="none" stroke="#8b7182" stroke-width="2"/></svg>`
+};
+DOG.star = DOG.normal.replace('</svg>','<polygon points="150,120 164,148 195,152 172,173 178,203 150,188 122,203 128,173 105,152 136,148" fill="#ffd95d" stroke="#d8a129" stroke-width="5"/></svg>');
+document.querySelectorAll('[data-dog]').forEach(el=>el.innerHTML=DOG[el.dataset.dog]||DOG.normal);
+
+(()=>{const game=document.getElementById('game');let chosen='⭐',pokes=0,audio=null;const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
+function tone(f=650,d=.07){try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.type='square';o.frequency.value=f;g.gain.setValueAtTime(.025,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+d)}catch(e){}}
+function show(id){$$('.screen').forEach(x=>x.classList.toggle('active',x.id===id));game.classList.toggle('night',['mail','letter','ending'].includes(id));tone(760,.05)}
+$$('[data-go]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.go)));
+$('#help').addEventListener('click',()=>{$('#introStatus').textContent='完成 4 個小任務，就能領取最後的東西。憑直覺玩就好！';tone(500)});
+$('#wait').addEventListener('click',()=>{$('#waitStatus').textContent='好咩～那我等妳一下 ૮⑉･-･⑉ა';tone(420)});
+$$('.answers').forEach(group=>{group.querySelectorAll('.btn').forEach(b=>b.addEventListener('click',()=>{group.querySelectorAll('.btn').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');group.parentElement.querySelector('.status').textContent='已記錄！૮⑉･-･⑉ა';tone(520);setTimeout(()=>{if(group.dataset.next==='surprise'){show('surprise');setTimeout(()=>{$('#surpriseText').textContent='不過今天已經有人準備了欸！';tone(930,.14)},850);setTimeout(()=>show('mail'),2300)}else show(group.dataset.next)},650)}))});
+$$('.item').forEach(b=>b.addEventListener('click',()=>{chosen=b.dataset.item;$('#itemText').textContent=`獲得了 ${chosen}！`;$('#keptItem').textContent=chosen;tone(940,.12);show('itemget')}));
+$('#mailWait').addEventListener('click',()=>{$('#mailStatus').textContent='真的不看咩？';tone(380)});
+$('#closeLetter').addEventListener('click',()=>{$('#miniMail').style.display='block';show('ending')});
+$('#miniMail').addEventListener('click',()=>show('letter'));
+$('#endDog').addEventListener('click',()=>{pokes++;const d=$('#endDog');d.classList.remove('boing');void d.offsetWidth;d.classList.add('boing');const s=$('#speech');if(pokes===1){s.textContent='不要再戳啦！！！';tone(430)}else if(pokes===2){s.innerHTML='不要欺負人家QAQ<br>好啦！不然再送妳一顆咩！！';tone(780);for(let i=0;i<34;i++)setTimeout(()=>{const h=document.createElement('span');h.className='heart';h.textContent=Math.random()>.5?'♥':'♡';h.style.left=(7+Math.random()*86)+'%';h.style.bottom=(6+Math.random()*28)+'%';game.appendChild(h);tone(650+Math.random()*400,.035);setTimeout(()=>h.remove(),1500)},i*38)}else{s.textContent='真的很愛戳欸！';tone(360)}})
+})();
+</script>
+</body></html>
